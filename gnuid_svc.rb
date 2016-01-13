@@ -2,8 +2,6 @@ require 'sinatra'
 require 'sinatra/cookies'
 require 'json'
 require 'base64'
-require 'rbnacl'
-require 'base32'
 require 'date'
 require 'net/http'
 
@@ -17,86 +15,6 @@ $knownIdentities = {}
 $passwords = {}
 $codes = {}
 $nonces = {}
-
-class User
-  attr_accessor :roles
-  attr_reader :name
-
-  def initialize(name)
-    @name = name
-  end
-
-  def is_in_role?(role)
-    return @roles.include?(role)
-  end
-end
-
-class AuthenticationFilter
-
-  def initialize()
-  end
-
-  def deserialize_pkey ( key_str )
-    p ">>>>>"+key_str
-    rawdata = Base32.decode(key_str)
-    return RbNaCl::VerifyKey.new(rawdata)
-  end
-
-  def check_signature (key, sig, data)
-    rawdata = Base32.decode(sig)
-    key.verify(rawdata, data)
-  end 
-  
-  def create_user_from_request(request,identity)
-    if (knownUserKeys.contains? identity)
-      p "No header"
-      return nil
-    end
-    if (!token.nil?)
-      header_b64 = token.split(".")[0]
-      payload_b64 = token.split(".")[1]
-      signature = token.split(".")[2]
-      plain = Base64.decode64(payload_b64)
-      payload = JSON.parse(plain)
-
-      user = User.new(payload["sub"])
-      user.roles = []
-      if (payload["iss"] == "Batman")
-        user.roles = ["Superhero", "Richkid", "Billionaire"];
-      end
-      return user
-    else
-      return nil
-    end
-
-  end
-
-  def filter_request (request,token)
-    user = create_user_from_request(request,token)
-    return user
-  end
-end
-
-
-#get '/' do
-#  auth_context = AuthenticationFilter.new
-#  identity = params[:identity]
-#  p "Identity: #{identity}"
-#  user = auth_context.filter_request(request, identity)
-#
-#  if (!user.nil?)
-#    response = "Hello #{user.name}!\n"
-#    response += "You are #{user.roles.join(" and ")}" unless user.roles.empty?
-#    return response
-#  end
-#  if (request.env['HTTP_X_GNUID_AVAILABLE'].nil?)
-#      p "No header"
-#      redirect "/login"
-#  end
-#  headers \
-#    "X-GNUid-Requested-Info" => requiredInfo.join(",")
-#  redirect "/servicepage?gnuid_requested=email,name" 
-#end
 
 def exchange_code_for_token(id_ticket, expected_nonce)
   p "Expected nonce: "+expected_nonce.to_s
