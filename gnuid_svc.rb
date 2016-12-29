@@ -3,7 +3,7 @@ require 'sinatra/cookies'
 require 'json'
 require 'base64'
 require 'date'
-require 'net/http'
+require 'rest_client'
 
 enable :sessions
 
@@ -165,3 +165,23 @@ get "/login" do
     #  $knownIdentities[identity] = grant_lbl
   end
 end
+
+
+def setCred(attribute, subject_key, expiration)
+  response = RestClient.get 'http://127.0.0.1:7776/credential/issue', :params => {:attribute => attribute, :subject_key => subject_key, :expiration => expiration}
+  res = JSON.parse(response)
+  data = res["data"]
+  subject_key = data[0]["attributes"]["credential"]["subject"]
+  p subject_key
+  return haml :issue, :locals => {:issueResult => res.to_json, :subject_key => subject_key}
+end
+
+
+get '/issue' do
+  return haml :issue
+end
+
+post '/issue' do
+  setCred(params[:attribute], params[:subject_key], params[:expiration]) 
+end
+

@@ -1,0 +1,13 @@
+
+%form{:action => "/issue", :method => "post"}
+  %input{:name => "attribute",  :value => "test"}/
+  %input{:name => "subject_key",  :value => "GC048JZGT5M7N5YS2N66KBGGXH1VNP6GXZ7GGCVB3JPBPM7PQ29G"}/
+  %input{:name => "expiration", :value => "1d"}/
+  %input.btn.btn-primary{:type => "submit", :value => "Issue Credential"}/
+%div
+%span #{locals[:issueResult]}
+%br
+%a{:class => "button", :href => "http://local.gnu:8000/index.html#/identities/#{locals[:subject_key]}"}
+%see subject's credential
+
+
