@@ -4,10 +4,10 @@
   %input{:name => "subject_key",  :value => "GC048JZGT5M7N5YS2N66KBGGXH1VNP6GXZ7GGCVB3JPBPM7PQ29G"}/
   %input{:name => "expiration", :value => "1d"}/
   %input.btn.btn-primary{:type => "submit", :value => "Issue Credential"}/
-%div
-%span #{locals[:issueResult]}
 %br
-%a{:class => "button", :href => "http://local.gnu:8000/index.html#/identities/#{locals[:subject_key]}"}
+%span #{locals[:credential]}
+%br
+%a{:class => "button", :href => "http://local.gnu:8000/index.html#/identities/#{locals[:subject_key]}?redirect_uri=http:%2F%2Fgnunetidentity.gnu:4567%2Flogin&issue_type=ticket&requested_attrs=phone,full_name&client_id=7WW9BYP2SEAM59624DQZXS2JPKAKVZ0YFGQGQCQY51GJMBKCB69G&nonce=9450&credential=#{locals[:credential]}"}
 %see subject's credential
 
 

@@ -172,8 +172,9 @@ def setCred(attribute, subject_key, expiration)
   res = JSON.parse(response)
   data = res["data"]
   subject_key = data[0]["attributes"]["credential"]["subject"]
-  p subject_key
-  return haml :issue, :locals => {:issueResult => res.to_json, :subject_key => subject_key}
+  credential = data[0]["id"]
+  p data
+  return haml :issue, :locals => {:issueResult => res.to_json, :subject_key => subject_key, :credential => credential}
 end
 
 
