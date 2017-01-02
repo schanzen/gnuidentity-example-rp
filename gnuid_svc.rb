@@ -174,8 +174,9 @@ def setCred(attribute, subject_key, expiration)
   data = res["data"]
   subject_key = data[0]["attributes"]["credential"]["subject"]
   credential = data[0]["id"]
-  p JSON.parse(response)
-  return haml :issue, :locals => {:issueResult => CGI.escape(response), :subject_key => subject_key, :credential => credential}
+  attribute = data[0]["id"].split(".").last
+  p attribute
+  return haml :issue, :locals => {:issueResult => CGI.escape(response), :subject_key => subject_key, :credential => credential, :attribute => attribute}
 end
 
 
