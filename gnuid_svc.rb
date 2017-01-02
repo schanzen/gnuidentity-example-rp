@@ -4,6 +4,7 @@ require 'json'
 require 'base64'
 require 'date'
 require 'rest_client'
+require 'cgi'
 
 enable :sessions
 
@@ -173,8 +174,8 @@ def setCred(attribute, subject_key, expiration)
   data = res["data"]
   subject_key = data[0]["attributes"]["credential"]["subject"]
   credential = data[0]["id"]
-  p data
-  return haml :issue, :locals => {:issueResult => res.to_json, :subject_key => subject_key, :credential => credential}
+  p JSON.parse(response)
+  return haml :issue, :locals => {:issueResult => CGI.escape(response), :subject_key => subject_key, :credential => credential}
 end
 
 
