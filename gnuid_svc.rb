@@ -181,7 +181,26 @@ end
 
 
 get '/issue' do
-  return haml :issue
+  identity = session["user"]
+
+  if (!identity.nil?)
+    token = $knownIdentities[identity]
+    #if (is_token_expired (token))
+    #  # Token is expired
+    #  redirect "/login"
+    #end
+    if (!token.nil?)
+      phone = token["phone"]
+      #msg = "Welcome back #{$knownIdentities[identity]["sub"]}"
+      #msg += "<br/> Your phone number is: #{phone}"
+      exp = token["exp"] / 1000000
+      #msg += "<br/>Your token will expire at: #{Time.at(exp).to_s}"
+      return haml :issue, :locals => { :subject_key => $knownIdentities[identity]["sub"] }
+    end
+  end
+
+
+  redirect "/login"
 end
 
 post '/issue' do

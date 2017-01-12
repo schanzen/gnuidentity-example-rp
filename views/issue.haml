@@ -5,22 +5,18 @@
   %option{:value => "discount"} discount
   %option{:value => "developer"} developer
   %option{:value => "user"} user
- %select{:name => "subject_key"}
-  %option{:value => "HD73DP66B7B6PXV432MWHKBZ6SXCBRFYPPHGSV4RXKPKDBQVT640"} service
-  %option{:value => "GC048JZGT5M7N5YS2N66KBGGXH1VNP6GXZ7GGCVB3JPBPM7PQ29G"} alice
-  %option{:value => "0NSEADEZ2VTH4EHG4Q48D7ZPXQCDXH66ADXG28BD1AXV477K8G8G"} gnunet
-  %option{:value => "93XS57KHZ0WWHHNQPDS2BTZJB7Q5P9650NVTAM35QBH369J8X4W0"} gnu
  %select{:name => "expiration"}
   %option{:value => "5m"} 5 Minutes
   %option{:value => "1h"} 1 Hour
   %option{:value => "1d"} 1 Day
   %option{:value => "7d"} 1 Week
- %input.btn.btn-primary{:type => "submit", :value => "Issue Credential"}/
+ %input{:type => "hidden", :name => "subject_key", :value => "#{locals[:subject_key]}"}
+ %input.btn.btn-primary{:type => "submit", :value => "Issue Credential"}
 %br
 %span Credential: #{locals[:credential]}
 %br
 %br
-%a{:class => "button", :href => "http://localhost:8000/index.html#/identities/#{locals[:subject_key]}?redirect_uri=http:%2F%2Fgnunetidentity.gnu:4567%2Flogin&issue_type=ticket&requested_attrs=phone,full_name&client_id=7WW9BYP2SEAM59624DQZXS2JPKAKVZ0YFGQGQCQY51GJMBKCB69G&nonce=9450&requested_verified_attrs=#{locals[:attribute]}&credential=#{locals[:issueResult]}"}
+%a{:class => "button", :href => "http://localhost:8000/index.html#/identities/#{locals[:subject_key]}?redirect_uri=http:%2F%2Fgnunetidentity.gnu:4567%2Flogin&issue_type=ticket&client_id=ZCGJ4R7MC60K13T78F01YRXYQA5YCDQVA4SZY12KFSY4SC3P29ZG&nonce=9450&credential=#{locals[:issueResult]}"}
 %see subject's credential
 
 
