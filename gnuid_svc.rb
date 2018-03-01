@@ -18,28 +18,34 @@ $nonces = {}
 
 def exchange_code_for_token(id_ticket, expected_nonce)
   p "Expected nonce: "+expected_nonce.to_s
-  resp = `curl -X POST 'http://local.gnu:7776/idp/token?ticket=#{id_ticket}&expected_nonce=#{expected_nonce}'`
+  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 'https://identity.gnu/idp/token?grant_type=authorization_code&redirect_uri=https://9JJ6BXB9WAK5A5Y25QZAV3XKJR0FNHTKCE74CS9CDG3DF7BTRYAG.zkey/login&code=#{id_ticket}' -u 9JJ6BXB9WAK5A5Y25QZAV3XKJR0FNHTKCE74CS9CDG3DF7BTRYAG:secret -k`
   p resp
   json = JSON.parse(resp)
   p json
   return nil if json.nil? or json.empty?
-  token = json["token"]
-  return nil if token.nil?
-  header_b64 = token.split(".")[0]
-  payload_b64 = token.split(".")[1]
-  signature = token.split(".")[2]
+  id_token = json["id_token"]
+  access_token = json["access_token"]
+  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 'https://identity.gnu/idp/userinfo' -H 'Authorization: Bearer #{access_token}' -k`
+  p resp
+
+  return nil if id_token.nil?
+  header_b64 = id_token.split(".")[0]
+  payload_b64 = id_token.split(".")[1]
+  signature = id_token.split(".")[2]
   plain = Base64.decode64(payload_b64)
+  payload_userinfo = JSON.parse(resp)
   payload = JSON.parse(plain)
-  return nil unless expected_nonce == payload["nonce"].to_i
+  #return nil unless expected_nonce == payload["nonce"].to_i
   identity = payload["iss"]
   p payload
-  $knownIdentities[identity] = payload
+  p payload_userinfo
+  $knownIdentities[identity] = payload_userinfo
   $codes[identity] = id_ticket
   return identity
 end
 
 def is_token_expired (token)
-  return true if token.nil?
+  return true # TODO if token.nil?
   identity = $knownIdentities[token["iss"]]
   exp = Time.at(token["exp"] / 1000000)
   if (Time.now > exp)
@@ -88,16 +94,16 @@ get '/' do
     #  redirect "/login"
     #end
     if (!token.nil?)
-      phone = token["phone"]
+      email = token["email"]
       #msg = "Welcome back #{$knownIdentities[identity]["sub"]}"
       #msg += "<br/> Your phone number is: #{phone}"
-      exp = token["exp"] / 1000000
+      #exp = token["exp"] / 1000000
       #msg += "<br/>Your token will expire at: #{Time.at(exp).to_s}"
       return haml :info, :locals => {
         :user => getUser(identity),
         :title => "Userinfo",
         :subtitle => "Welcome back #{$knownIdentities[identity]["full_name"]}",
-        :content => "Your <b>phone</b> number is: #{phone}<br/>Your token will <b>expire at</b>: #{Time.at(exp).to_s}.<br/>Used <b>ticket</b>: #{$codes[identity]}.<br/>Token: #{$knownIdentities[identity]}<br/>"}
+        :content => "Your <b>email</b> number is: #{email}<br/><br/>Userinfo: #{$knownIdentities[identity]}<br/>"}
     end
   end
 
@@ -107,7 +113,7 @@ end
 get "/login" do
   identity = session["user"]
   token = params[:id_token]
-  id_ticket = params[:ticket]
+  id_ticket = params[:code]
 
   # Identity parameter takes precendence over cookie
   #if (!params[:identity].nil?)
@@ -143,10 +149,10 @@ get "/login" do
     end
     token = $knownIdentities[identity]
     p token
-    phone = $knownIdentities[identity]["phone"]
+    email = $knownIdentities[identity]["email"]
     session["user"] = identity
-    if (phone.nil?)
-      return "You did not provide a valid phone attribute. Please grant us access to your phone number so we can call you in emergencies!<br/> <a href=http://localhost:8000/index.html#/identities/#{identity}?requested_by=http%3A//localhost%3A4567/&requested_attrs=phone>Grant access</a>"
+    if (email.nil?)
+      return "You did not provide a valid email. Please grant us access to your email!<br/> <a href=http://localhost:8000/index.html#/identities/#{identity}?requested_by=http%3A//localhost%3A4567/&requested_attrs=phone>Grant access</a>"
     end
     #Handle token contents
     redirect "/"

@@ -8,8 +8,8 @@
 %div{:class => "col-2", :style => "text-align: center;"}
   %div Identity federation:
   %br
-  %a{:class => "button big", :href => "http://facebook.com"} facebook
-  %a{:class => "button big", :href => "http://google.com"} google
-  %a{:class => "button big", :href => "gnuidentity://?redirect_uri=http%3A%2F%2Fgnunetidentity.gnu%3A4567%2Flogin&client_id=ENTERYOURGNSMASTERPKEYHERE&issue_type=ticket&requested_attrs=phone,full_name&nonce=#{locals[:nonce]}"}
-    %span GNU identity
+  %a{:class => "button big", :style => "background: #3b5998;", :href => "http://facebook.com"} facebook
+  %a{:class => "button big", :style => "background: #ea4335;", :href => "http://google.com"} Google
+  %a{:class => "button big", :href => "https://identity.gnu/idp/authorize?redirect_uri=https%3A%2F%2F9JJ6BXB9WAK5A5Y25QZAV3XKJR0FNHTKCE74CS9CDG3DF7BTRYAG.zkey%2Flogin&client_id=9JJ6BXB9WAK5A5Y25QZAV3XKJR0FNHTKCE74CS9CDG3DF7BTRYAG&response_type=code&scope=openid%20email&nonce=#{locals[:nonce]}"}
+    %span re:claimID
 
