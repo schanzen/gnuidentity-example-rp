@@ -18,14 +18,14 @@ $nonces = {}
 
 def exchange_code_for_token(id_ticket, expected_nonce)
   p "Expected nonce: "+expected_nonce.to_s
-  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 'https://reclaim.id/idp/token?grant_type=authorization_code&redirect_uri=https://FBP4M6CS8BBFGDW3110ETVYSCWPX0X86TM6FVC61ACNKGG36N7WG/login&code=#{id_ticket}' -u FBP4M6CS8BBFGDW3110ETVYSCWPX0X86TM6FVC61ACNKGG36N7WG:secret -k`
+  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 'https://reclaim.id/openid/token?grant_type=authorization_code&redirect_uri=https://FBP4M6CS8BBFGDW3110ETVYSCWPX0X86TM6FVC61ACNKGG36N7WG/login&code=#{id_ticket}' -u FBP4M6CS8BBFGDW3110ETVYSCWPX0X86TM6FVC61ACNKGG36N7WG:secret -k`
   p resp
   json = JSON.parse(resp)
   p json
   return nil if json.nil? or json.empty?
   id_token = json["id_token"]
   access_token = json["access_token"]
-  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 'https://reclaim.id/idp/userinfo' -H 'Authorization: Bearer #{access_token}' -k`
+  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 'https://reclaim.id/openid/userinfo' -H 'Authorization: Bearer #{access_token}' -k`
   p resp
 
   return nil if id_token.nil?
