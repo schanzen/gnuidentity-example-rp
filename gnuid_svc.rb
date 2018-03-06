@@ -18,7 +18,7 @@ $nonces = {}
 
 def exchange_code_for_token(id_ticket, expected_nonce)
   p "Expected nonce: "+expected_nonce.to_s
-  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 'https://reclaim.id/openid/token?grant_type=authorization_code&redirect_uri=https://FBP4M6CS8BBFGDW3110ETVYSCWPX0X86TM6FVC61ACNKGG36N7WG/login&code=#{id_ticket}' -u FBP4M6CS8BBFGDW3110ETVYSCWPX0X86TM6FVC61ACNKGG36N7WG:secret -k`
+  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 'https://reclaim.id/openid/token?grant_type=authorization_code&redirect_uri=https://shittr.INSERTRPKEYHERE/login&code=#{id_ticket}' -u INSERTRPKEYHERE:secret -k`
   p resp
   json = JSON.parse(resp)
   p json
