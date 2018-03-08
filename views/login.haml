@@ -10,6 +10,6 @@
   %br
   %a{:class => "button big", :style => "background: #3b5998;", :href => "http://facebook.com"} facebook
   %a{:class => "button big", :style => "background: #ea4335;", :href => "http://google.com"} Google
-  %a{:class => "button big", :href => "https://reclaim.id/openid/authorize?redirect_uri=https%3A%2F%2Fshittr.INSERTRPKEYHERE%2Flogin&client_id=INSERTRPKEYHERE&response_type=code&scope=openid%20email&nonce=#{locals[:nonce]}"}
+  %a{:class => "button big", :href => "#{locals[:reclaimEndpoint]}/openid/authorize?redirect_uri=https%3A%2F%2Fshittr.INSERTRPKEYHERE%2Flogin&client_id=INSERTRPKEYHERE&response_type=code&scope=openid%20email&nonce=#{locals[:nonce]}"}
     %span re:claimID
 

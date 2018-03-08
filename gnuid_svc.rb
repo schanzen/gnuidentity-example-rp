@@ -16,16 +16,18 @@ $passwords = {}
 $codes = {}
 $nonces = {}
 
+$reclaimEndpoint = ARGV[0]
+
 def exchange_code_for_token(id_ticket, expected_nonce)
   p "Expected nonce: "+expected_nonce.to_s
-  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 'https://reclaim.id/openid/token?grant_type=authorization_code&redirect_uri=https://shittr.INSERTRPKEYHERE/login&code=#{id_ticket}' -u INSERTRPKEYHERE:secret -k`
+  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 '#{reclaimEndpoint}/openid/token?grant_type=authorization_code&redirect_uri=https://shittr.INSERTRPKEYHERE/login&code=#{id_ticket}' -u INSERTRPKEYHERE:secret -k`
   p resp
   json = JSON.parse(resp)
   p json
   return nil if json.nil? or json.empty?
   id_token = json["id_token"]
   access_token = json["access_token"]
-  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 'https://reclaim.id/openid/userinfo' -H 'Authorization: Bearer #{access_token}' -k`
+  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 '#{reclaimEndpoint}/openid/userinfo' -H 'Authorization: Bearer #{access_token}' -k`
   p resp
 
   return nil if id_token.nil?
@@ -163,7 +165,8 @@ get "/login" do
     return haml :login, :locals => {
       :user => getUser(nil),
       :title => "Login",
-      :nonce => nonce
+      :nonce => nonce,
+      :reclaimEndpoint => $reclaimEndpoint
     }
     #elsif (oauth_code.nil?)
     #  haml :grant, :locals => {:user => getUser(identity), :haml_id => identity, :title => "Information Needed"}
