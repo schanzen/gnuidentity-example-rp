@@ -105,7 +105,7 @@ get '/' do
         :user => getUser(identity),
         :title => "Userinfo",
         :subtitle => "Welcome back #{$knownIdentities[identity]["full_name"]}",
-        :content => "Your <b>email</b> number is: #{email}<br/><br/>Userinfo: #{$knownIdentities[identity]}<br/>"}
+        :content => "Your <b>email</b> is: #{email}<br/><br/>Userinfo: #{$knownIdentities[identity]}<br/>"}
     end
   end
 
