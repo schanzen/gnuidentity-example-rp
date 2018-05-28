@@ -103,9 +103,9 @@ get '/' do
       #msg += "<br/>Your token will expire at: #{Time.at(exp).to_s}"
       return haml :info, :locals => {
         :user => getUser(identity),
-        :title => "Userinfo",
-        :subtitle => "Welcome back #{$knownIdentities[identity]["full_name"]}",
-        :content => "Your <b>email</b> is: #{email}<br/><br/>Userinfo: #{$knownIdentities[identity]}<br/>"}
+        :title => "Welcome.",
+        :subtitle => "Welcome back #{$knownIdentities[identity]["full_name"]}(#{email})",
+        :content => "Login successful!"
     end
   end
 
