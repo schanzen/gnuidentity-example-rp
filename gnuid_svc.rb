@@ -15,6 +15,7 @@ $knownIdentities = {}
 $passwords = {}
 $codes = {}
 $nonces = {}
+$tokens = {}
 
 $reclaimEndpoint = ARGV[0]
 
@@ -42,6 +43,7 @@ def exchange_code_for_token(id_ticket, expected_nonce)
   p payload
   p payload_userinfo
   $knownIdentities[identity] = payload_userinfo
+  $tokens[identity] = id_token
   $codes[identity] = id_ticket
   return identity
 end
@@ -104,8 +106,8 @@ get '/' do
       return haml :info, :locals => {
         :user => getUser(identity),
         :title => "Welcome.",
-        :subtitle => "Welcome back #{$knownIdentities[identity]["full_name"]}(#{email})",
-        :content => "Login successful!"}
+        :subtitle => "Welcome back #{$knownIdentities[identity]["full_name"]} (#{email})",
+        :content => "Login successful! (OpenID Token: #{$tokens[identity]})"}
     end
   end
 
