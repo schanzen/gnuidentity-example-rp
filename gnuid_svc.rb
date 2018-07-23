@@ -21,7 +21,7 @@ $reclaimEndpoint = ARGV[0]
 
 def exchange_code_for_token(id_ticket, expected_nonce)
   p "Expected nonce: "+expected_nonce.to_s
-  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 '#{$reclaimEndpoint}/openid/token?grant_type=authorization_code&redirect_uri=myredirs&code=#{id_ticket}' -u INSERTRPKEYHERE:secret -k`
+  resp = `curl -X POST --socks5-hostname 127.0.0.1:7777 '#{$reclaimEndpoint}/openid/token?grant_type=authorization_code&redirect_uri=https://example.INSERTPKEYHERE/login&code=#{id_ticket}' -u INSERTRPKEYHERE:secret -k`
   p resp
   json = JSON.parse(resp)
   p json
